@@ -1,18 +1,33 @@
-import React from 'react'
+import React, { useEffect } from 'react';
+import { AppProvider, useAppContext } from './context/AppContext';
+import { AuthPage } from './pages/AuthPage';
+import { DashboardPage } from './pages/DashboardPage';
+
+function AppContent() {
+  const { state } = useAppContext();
+
+  // Apply dark mode to document
+  useEffect(() => {
+    if (state.darkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [state.darkMode]);
+
+  if (!state.isAuthenticated) {
+    return <AuthPage />;
+  }
+
+  return <DashboardPage />;
+}
 
 function App() {
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-      <div className="bg-white p-8 rounded-lg shadow-md">
-        <h1 className="text-2xl font-bold text-gray-800 mb-4">
-          Welcome to Vista Bloom
-        </h1>
-        <p className="text-gray-600">
-          Your application is now ready!
-        </p>
-      </div>
-    </div>
-  )
+    <AppProvider>
+      <AppContent />
+    </AppProvider>
+  );
 }
 
-export default App
+export default App;
